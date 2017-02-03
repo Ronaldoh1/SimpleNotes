@@ -16,6 +16,8 @@
 		F2B85EBF1E444BCD007119B2 /* Note2.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2B85EBB1E444BCD007119B2 /* Note2.swift */; };
 		F2B85EC01E444BCD007119B2 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2B85EBC1E444BCD007119B2 /* NoteCell.swift */; };
 		F2FB6A601E44B3FD00A609D8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2FB6A5F1E44B3FD00A609D8 /* Extensions.swift */; };
+		F2FB6A6B1E44BE2F00A609D8 /* Note+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2FB6A691E44BE2F00A609D8 /* Note+CoreDataClass.swift */; };
+		F2FB6A6C1E44BE2F00A609D8 /* Note+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2FB6A6A1E44BE2F00A609D8 /* Note+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		F2B85EBB1E444BCD007119B2 /* Note2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note2.swift; sourceTree = "<group>"; };
 		F2B85EBC1E444BCD007119B2 /* NoteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		F2FB6A5F1E44B3FD00A609D8 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		F2FB6A691E44BE2F00A609D8 /* Note+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Note+CoreDataClass.swift"; path = "../Note+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F2FB6A6A1E44BE2F00A609D8 /* Note+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Note+CoreDataProperties.swift"; path = "../Note+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +82,8 @@
 		F2B85EC11E444BEA007119B2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				F2FB6A691E44BE2F00A609D8 /* Note+CoreDataClass.swift */,
+				F2FB6A6A1E44BE2F00A609D8 /* Note+CoreDataProperties.swift */,
 				F2B85EBB1E444BCD007119B2 /* Note2.swift */,
 			);
 			name = Models;
@@ -184,8 +190,10 @@
 				F2B85EAD1E444B5E007119B2 /* SimpleNotes.xcdatamodeld in Sources */,
 				F2B85EC01E444BCD007119B2 /* NoteCell.swift in Sources */,
 				F2B85EBF1E444BCD007119B2 /* Note2.swift in Sources */,
+				F2FB6A6B1E44BE2F00A609D8 /* Note+CoreDataClass.swift in Sources */,
 				F2B85EBE1E444BCD007119B2 /* HomeViewController.swift in Sources */,
 				F2FB6A601E44B3FD00A609D8 /* Extensions.swift in Sources */,
+				F2FB6A6C1E44BE2F00A609D8 /* Note+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class EditNoteViewController: UIViewController {
 
@@ -66,9 +67,28 @@ class EditNoteViewController: UIViewController {
 
     //MARK: Saving Data
 
-    private func createNote(_ title: String, _ description: String) -> Note?{
-        return nil
+    private func createNote(_ title: String, _ body: String) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let context = appDelegate.persistentContainer.viewContext
+
+        let note = NSEntityDescription.insertNewObject(forEntityName: "Note", into: context) as? Note
+        note?.title = title
+        note?.body = body
+        note?.date = Date()
+
+        do {
+            try context.save()
+           _ = navigationController?.popViewController(animated: true)
+
+        } catch let error {
+            print(error)
+        }
+
     }
+
+
 
     //MARK: Helper Methods
 
@@ -89,7 +109,7 @@ class EditNoteViewController: UIViewController {
     @objc private func saveNote() {
 
         if let title = titleTextField.text, !title.isEmpty, descriptionTextView.text != "Note...", descriptionTextView.text.characters.count != 0 {
-            print("Hii")
+            createNote(title, descriptionTextView.text)
         } else {
             presentAlert()
         }

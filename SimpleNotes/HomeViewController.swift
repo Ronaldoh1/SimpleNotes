@@ -1,3 +1,4 @@
+
 //
 //  HomeViewController.swift
 //  SimpleNotes
@@ -7,17 +8,15 @@
 //
 
 import UIKit
+import CoreData
 
 class HomeViewController: UITableViewController {
 
     private let cellID = "noteCellIdentifier"
 
-    private var notes: [Note]? {
-        let note = Note()
-        note.title = "Hi"
-        note.body = "Dude fsfsdflsakjf slfj lsajflsajflasfjasljfljaslfjlsajlfasjkflajlfjlasdlfjasljfljldjlsfjlskdfjlsajlfjsalkjfklaj"
-        return [note]
-    }
+    private var notes = [Note]()
+
+    //MARK: Life Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +28,11 @@ class HomeViewController: UITableViewController {
         loadData()
 
         setupNavigationBarItems()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadData()
     }
 
     //MARK: Helper Methods
@@ -47,25 +51,47 @@ class HomeViewController: UITableViewController {
 
     private func loadData() {
 
-        
+      guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+        return
+        }
+      let context = appDelegate.persistentContainer.viewContext
+
+       let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Note")
+        request.sortDescriptors  = [NSSortDescriptor(key: "date", ascending: false)]
+
+       request.returnsObjectsAsFaults = false
+
+        do {
+            let results = try context.fetch(request)
+            if results.count > 0 {
+                notes.removeAll()
+                for result in results {
+                    guard let note = result as? Note else {
+                        return
+                    }
+                    notes.append(note)
+
+                }
+            }
+        } catch let error {
+            print(error)
+        }
+
+       self.tableView.reloadData()
     }
 
     //MARK: UITableViewDataSource Methods
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let count = notes?.count {
-            return count
-        }
-
-        return 0
+        return notes.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! NoteCell
 
-        if let note = notes?[indexPath.row] {
-            cell.note = note
-        }
+        let note = notes[indexPath.row]
+        cell.note = note
+
 
         return cell
     }
