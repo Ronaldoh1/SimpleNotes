@@ -41,7 +41,7 @@ class EditNoteViewController: UIViewController {
         label.text = "140 Characters Remaining"
         label.frame = CGRect(x: 0, y: 0, width: 150, height: 30)
         label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = UIColor(red: 45/255, green: 190/255, blue: 96/255, alpha: 1)
+        label.textColor = UIColor.rgb(red: 45, green: 190, blue: 96)
         return label
     }()
 
@@ -49,7 +49,7 @@ class EditNoteViewController: UIViewController {
         let button = UIButton(type: .system)
         button.layer.cornerRadius = 5
         button.frame = CGRect(x: 0, y: 0, width: 60, height: 40)
-        button.backgroundColor = UIColor(red: 61/255, green: 167/255, blue: 244/255, alpha: 1)
+        button.backgroundColor = UIColor.rgb(red: 61, green: 167, blue: 244)
         button.setTitle("Save", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)
@@ -64,6 +64,13 @@ class EditNoteViewController: UIViewController {
         setUpViews()
     }
 
+    //MARK: Saving Data
+
+    private func createNote(_ title: String, _ description: String) -> Note?{
+        return nil
+    }git 
+
+    //MARK: Helper Methods
 
     private func setUpKeyboardToolBar() -> UIView {
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 50))
@@ -74,7 +81,7 @@ class EditNoteViewController: UIViewController {
             UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
             UIBarButtonItem(customView: saveButton)
         ]
-        toolBar.backgroundColor = UIColor(red: 132/255, green: 132/255, blue: 132/255, alpha: 1)
+        toolBar.backgroundColor = UIColor.rgb(red: 132, green: 132, blue: 132)
         toolBar.sizeToFit()
         return toolBar
     }
@@ -87,10 +94,6 @@ class EditNoteViewController: UIViewController {
             presentAlert()
         }
 
-    }
-
-    private func createNote(_ title: String, _ description: String) -> Note?{
-       return nil
     }
 
     private func presentAlert() {
