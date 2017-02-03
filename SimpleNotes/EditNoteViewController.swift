@@ -68,7 +68,7 @@ class EditNoteViewController: UIViewController {
 
     private func createNote(_ title: String, _ description: String) -> Note?{
         return nil
-    }git 
+    }
 
     //MARK: Helper Methods
 
