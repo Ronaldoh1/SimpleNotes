@@ -11,22 +11,20 @@ import CoreData
 
 class EditNoteViewController: UIViewController {
 
-    fileprivate let titleTextField: UITextField = {
+    private let titleTextField: UITextField = {
         let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Title"
+        textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
 
-    fileprivate lazy var descriptionTextView: UITextView = {
+    fileprivate let descriptionTextView: UITextView = {
         let textView = UITextView()
-        textView.translatesAutoresizingMaskIntoConstraints = false
         textView.text = "Note..."
         textView.backgroundColor = .clear
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.textColor = .lightGray
-        textView.delegate = self
-        textView.inputAccessoryView = self.setUpKeyboardToolBar()
+        textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
 
@@ -58,39 +56,80 @@ class EditNoteViewController: UIViewController {
         return button
     }()
 
+    var note: Note? {
+        didSet {
+            if let note = note {
+                titleTextField.text = note.title
+                descriptionTextView.text = note.body
+                descriptionTextView.textColor = .black
+            }
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
 
+        view.backgroundColor = .white
+        setUpNavigationBarItems()
+        setUpTextView()
         setUpViews()
     }
 
-    //MARK: Saving Data
+    //MARK: Save Data - Helper Methods
+
+    private func updateNote(_ title: String, body: String) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+
+        note?.title = title
+        note?.body = body
+        note?.date = Date()
+        appDelegate.saveContext()
+        _ = navigationController?.popViewController(animated: true)
+    }
 
     private func createNote(_ title: String, _ body: String) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
+
         let context = appDelegate.persistentContainer.viewContext
 
-        let note = NSEntityDescription.insertNewObject(forEntityName: "Note", into: context) as? Note
-        note?.title = title
-        note?.body = body
-        note?.date = Date()
+        guard let note = NSEntityDescription.insertNewObject(forEntityName: "Note", into: context) as? Note else {
+            return
+        }
+
+        note.title = title
+        note.body = body
+        note.date = Date()
 
         do {
             try context.save()
-           _ = navigationController?.popViewController(animated: true)
-
+            _ = navigationController?.popViewController(animated: true)
         } catch let error {
             print(error)
         }
-
     }
 
-
-
     //MARK: Helper Methods
+
+    private func setUpNavigationBarItems() {
+        if note != nil {
+            navigationItem.title = "Edit Note"
+        } else {
+            navigationItem.title = "New Note"
+        }
+    }
+
+    @objc private func handleCancel() {
+        _ = navigationController?.popViewController(animated: true)
+    }
+
+    private func setUpTextView() {
+        descriptionTextView.delegate = self
+        descriptionTextView.inputAccessoryView = self.setUpKeyboardToolBar()
+    }
 
     private func setUpKeyboardToolBar() -> UIView {
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 50))
@@ -99,21 +138,22 @@ class EditNoteViewController: UIViewController {
         toolBar.items = [
             UIBarButtonItem(customView: characterCountLabel),
             UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
-            UIBarButtonItem(customView: saveButton)
-        ]
+            UIBarButtonItem(customView: saveButton)]
         toolBar.backgroundColor = UIColor.rgb(red: 132, green: 132, blue: 132)
         toolBar.sizeToFit()
         return toolBar
     }
 
     @objc private func saveNote() {
-
-        if let title = titleTextField.text, !title.isEmpty, descriptionTextView.text != "Note...", descriptionTextView.text.characters.count != 0 {
-            createNote(title, descriptionTextView.text)
+        if note != nil {
+            updateNote(titleTextField.text!, body: descriptionTextView.text)
         } else {
-            presentAlert()
+            if let title = titleTextField.text, !title.isEmpty, descriptionTextView.text != "Note...", descriptionTextView.text.characters.count != 0 {
+                createNote(title, descriptionTextView.text)
+            } else {
+                presentAlert()
+            }
         }
-
     }
 
     private func presentAlert() {
@@ -152,7 +192,6 @@ extension EditNoteViewController: UITextViewDelegate {
     }
 
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-
         if text.characters.count == 0 {
             if textView.text.characters.count != 0 {
                 return true
@@ -160,22 +199,22 @@ extension EditNoteViewController: UITextViewDelegate {
         } else if textView.text.characters.count > 139 {
             return false
         }
-
         return true
     }
 
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == .lightGray  {
+        if textView.textColor == .lightGray && textView.text == "Note..." {
             textView.text = nil
+            textView.textColor = .black
+        } else {
             textView.textColor = .black
         }
     }
-
+    
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
-            textView.text = "Enter text..."
+            textView.text = "Note..."
             textView.textColor = .lightGray
         }
     }
 }
-

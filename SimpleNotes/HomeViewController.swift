@@ -13,21 +13,16 @@ import CoreData
 class HomeViewController: UITableViewController {
 
     private let cellID = "noteCellIdentifier"
-
     private var notes = [Note]()
 
     //MARK: Life Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.backgroundColor = .white
-        tableView.register(NoteCell.self, forCellReuseIdentifier: cellID)
-        tableView.estimatedRowHeight = 70
-        tableView.separatorInset = .zero
 
+        setUpNavigationBarItems()
+        setUpTableView()
         loadData()
-
-        setupNavigationBarItems()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -37,29 +32,34 @@ class HomeViewController: UITableViewController {
 
     //MARK: Helper Methods
 
-    private func setupNavigationBarItems() {
-        navigationItem.title = "Notes"
+    private func setUpTableView() {
+        tableView.backgroundColor = .white
+        tableView.register(NoteCell.self, forCellReuseIdentifier: cellID)
+        tableView.estimatedRowHeight = 70
+        tableView.separatorInset = .zero
+    }
 
+    private func setUpNavigationBarItems() {
+        navigationItem.title = "Notes"
         let newNoteButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(newNote))
         navigationItem.rightBarButtonItem = newNoteButton
     }
 
     @objc private func newNote() {
-        let editNoteVC = EditNoteViewController()
-        navigationController?.pushViewController(editNoteVC, animated: true)
+        let newNoteVC = EditNoteViewController()
+        navigationController?.pushViewController(newNoteVC, animated: true)
     }
 
     private func loadData() {
 
-      guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-        return
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
         }
-      let context = appDelegate.persistentContainer.viewContext
+        let context = appDelegate.persistentContainer.viewContext
 
-       let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Note")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Note")
         request.sortDescriptors  = [NSSortDescriptor(key: "date", ascending: false)]
-
-       request.returnsObjectsAsFaults = false
+        request.returnsObjectsAsFaults = false
 
         do {
             let results = try context.fetch(request)
@@ -70,14 +70,13 @@ class HomeViewController: UITableViewController {
                         return
                     }
                     notes.append(note)
-
                 }
             }
         } catch let error {
             print(error)
         }
 
-       self.tableView.reloadData()
+        self.tableView.reloadData()
     }
 
     //MARK: UITableViewDataSource Methods
@@ -88,15 +87,20 @@ class HomeViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! NoteCell
-
         let note = notes[indexPath.row]
         cell.note = note
-
 
         return cell
     }
 
+    //MARK: UITableViewDelegate
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        let editViewController = EditNoteViewController()
+        editViewController.note = notes[indexPath.row]
+        navigationController?.pushViewController(editViewController, animated: true)
+    }
 
 }
-
-
